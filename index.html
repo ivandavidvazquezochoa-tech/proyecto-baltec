@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Baltec</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="bg-gray-100 font-sans pb-10">
+    <div class="max-w-7xl mx-auto py-10 px-5">
+        <h1 class="text-4xl font-bold text-blue-800 mb-8 text-center">Panel de Control Baltec</h1>
+        
+        <!-- DASHBOARD DE ESTADÍSTICAS (Ahora con 4 columnas) -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg p-6 shadow-md border-l-4 border-green-500">
+                <p class="text-gray-500 text-xs font-bold uppercase tracking-wider">Ingresos Totales</p>
+                <p id="stat-ingresos" class="text-2xl font-bold text-gray-800">$0.00</p>
+            </div>
+            <div class="bg-white rounded-lg p-6 shadow-md border-l-4 border-blue-500">
+                <p class="text-gray-500 text-xs font-bold uppercase tracking-wider">Ventas Directas</p>
+                <p id="stat-ventas" class="text-2xl font-bold text-gray-800">0</p>
+            </div>
+            <div class="bg-white rounded-lg p-6 shadow-md border-l-4 border-red-500">
+                <p class="text-gray-500 text-xs font-bold uppercase tracking-wider">Equipos en Catálogo</p>
+                <p id="stat-equipos" class="text-2xl font-bold text-gray-800">0</p>
+            </div>
+            <div class="bg-white rounded-lg p-6 shadow-md border-l-4 border-purple-500">
+                <p class="text-gray-500 text-xs font-bold uppercase tracking-wider">Prospectos (Leads)</p>
+                <p id="stat-prospectos" class="text-2xl font-bold text-gray-800">0</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <!-- Columna Izquierda: Formulario y Pedidos -->
+            <div class="lg:col-span-1 space-y-8">
+                <div class="bg-white shadow-md rounded-lg p-6 border-t-4 border-green-500">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-700">➕ Añadir Producto</h2>
+                    <form id="form-producto" class="space-y-3" onsubmit="guardarProducto(event)">
+                        <input type="text" id="prod-nombre" placeholder="Nombre (ej. Extractor)" class="w-full border p-2 rounded outline-none focus:ring-2 focus:ring-green-400" required>
+                        <textarea id="prod-desc" placeholder="Descripción técnica" class="w-full border p-2 rounded outline-none focus:ring-2 focus:ring-green-400" rows="2"></textarea>
+                        <div class="flex gap-2">
+                            <input type="number" id="prod-precio" placeholder="Precio ($)" class="w-1/2 border p-2 rounded outline-none focus:ring-2 focus:ring-green-400" required step="0.01">
+                            <input type="number" id="prod-stock" placeholder="Stock" class="w-1/2 border p-2 rounded outline-none focus:ring-2 focus:ring-green-400" required>
+                        </div>
+                        <button type="submit" class="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700 font-bold transition">Guardar en Catálogo</button>
+                    </form>
+                </div>
+
+                <div class="bg-white shadow-md rounded-lg p-6 border-t-4 border-yellow-500">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-700">📦 Últimos Pedidos</h2>
+                    <ul id="pedidos-lista" class="divide-y divide-gray-200 text-sm max-h-64 overflow-y-auto">
+                        <p class="text-gray-500">Cargando...</p>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Catálogo -->
+            <div class="lg:col-span-2">
+                <div class="bg-white shadow-md rounded-lg p-6 border-t-4 border-blue-500 h-full">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                        <h2 class="text-2xl font-semibold text-gray-700">🛒 Catálogo de Equipos</h2>
+                        <input type="text" id="buscador" onkeyup="filtrarProductos()" placeholder="🔍 Buscar equipo..." class="w-full md:w-1/2 border-2 border-gray-200 p-2 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition">
+                    </div>
+                    <div id="productos-lista" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[600px] overflow-y-auto pr-2">
+                        <p class="text-gray-500 text-sm">Cargando productos...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NUEVA BANDEJA DE PROSPECTOS (LEADS CRM) -->
+        <div class="bg-white shadow-md rounded-lg p-6 border-t-4 border-purple-500">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-700">📞 Bandeja de Cotizaciones (Leads)</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-600 text-sm border-b">
+                            <th class="p-3">ID</th>
+                            <th class="p-3">Cliente / Empresa</th>
+                            <th class="p-3">Email</th>
+                            <th class="p-3">Teléfono</th>
+                            <th class="p-3">Equipo de Interés</th>
+                            <th class="p-3 text-center">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="prospectos-lista" class="text-sm divide-y">
+                        <tr><td colspan="6" class="p-4 text-center text-gray-500">Cargando prospectos...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function cargarProductos() {
+            const res = await fetch('/productos/');
+            const productos = await res.json();
+            const contenedor = document.getElementById('productos-lista');
+            contenedor.innerHTML = '';
+            
+            document.getElementById('stat-equipos').innerText = productos.length;
+
+            if(productos.length === 0) {
+                contenedor.innerHTML = '<p class="text-gray-500 italic">Catálogo vacío.</p>';
+            }
+
+            productos.forEach(p => {
+                const textoBusqueda = `${p.nombre.toLowerCase()} ${p.descripcion ? p.descripcion.toLowerCase() : ''}`;
+                contenedor.innerHTML += `
+                    <div class="producto-tarjeta border border-gray-200 rounded-lg p-4 flex flex-col justify-between bg-gray-50 hover:shadow-md transition" data-busqueda="${textoBusqueda}">
+                        <div class="mb-3">
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-bold text-lg text-blue-800">${p.nombre}</h3>
+                                <button onclick="borrarProducto(${p.id})" class="text-red-400 hover:text-red-700 font-bold px-2 text-xl" title="Eliminar">×</button>
+                            </div>
+                            <p class="text-sm text-gray-600 line-clamp-2">${p.descripcion || ''}</p>
+                            <div class="flex justify-between items-center mt-2">
+                                <p class="text-green-700 font-extrabold text-lg">$${p.precio.toFixed(2)}</p>
+                                <span class="${p.stock > 0 ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'} text-xs font-semibold px-2 py-1 rounded">Stock: ${p.stock}</span>
+                            </div>
+                        </div>
+                        <button onclick="crearPedido(${p.id})" class="w-full ${p.stock > 0 ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'} text-white px-4 py-2 rounded shadow font-semibold transition flex justify-center items-center gap-2" ${p.stock === 0 ? 'disabled' : ''}>
+                            ${p.stock > 0 ? '🛒 Vender Directo' : '❌ Agotado'}
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        async function cargarPedidos() {
+            const res = await fetch('/pedidos/');
+            const pedidos = await res.json();
+            const contenedor = document.getElementById('pedidos-lista');
+            contenedor.innerHTML = '';
+            
+            let ingresosTotales = 0;
+            const pedidosReversos = pedidos.reverse();
+            pedidosReversos.forEach(p => ingresosTotales += p.total);
+            
+            document.getElementById('stat-ventas').innerText = pedidos.length;
+            document.getElementById('stat-ingresos').innerText = '$' + ingresosTotales.toLocaleString('en-US', {minimumFractionDigits: 2});
+
+            if(pedidos.length === 0) contenedor.innerHTML = '<p class="text-gray-500 italic">No hay ventas registradas.</p>';
+
+            pedidosReversos.forEach(p => {
+                contenedor.innerHTML += `
+                    <li class="py-3 flex flex-col border-b border-gray-100">
+                        <div class="flex justify-between">
+                            <span class="text-gray-800 font-semibold">Orden #${p.id}</span>
+                            <span class="font-bold text-green-600">$${p.total.toFixed(2)}</span>
+                        </div>
+                        <span class="text-xs text-gray-500">ID Equipo: ${p.producto_id} | Cantidad: 1</span>
+                    </li>
+                `;
+            });
+        }
+
+        // CARGAR LOS PROSPECTOS (LEADS)
+        async function cargarProspectos() {
+            const res = await fetch('/prospectos/');
+            const prospectos = await res.json();
+            const tabla = document.getElementById('prospectos-lista');
+            tabla.innerHTML = '';
+            
+            document.getElementById('stat-prospectos').innerText = prospectos.length;
+
+            if(prospectos.length === 0) {
+                tabla.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-500 italic">Aún no hay clientes interesados.</td></tr>';
+                return;
+            }
+
+            prospectos.forEach(p => {
+                // Formateamos el teléfono para WhatsApp (quitando espacios o guiones)
+                const telWhatsApp = p.telefono.replace(/\D/g,'');
+                tabla.innerHTML += `
+                    <tr class="hover:bg-gray-50 transition border-b">
+                        <td class="p-3 text-gray-500 font-mono">#${p.id}</td>
+                        <td class="p-3 font-semibold text-gray-800 uppercase">${p.nombre_cliente}</td>
+                        <td class="p-3 text-blue-600 hover:underline"><a href="mailto:${p.email_cliente}">${p.email_cliente}</a></td>
+                        <td class="p-3">${p.telefono}</td>
+                        <td class="p-3"><span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-bold border border-purple-200">${p.equipo_interes}</span></td>
+                        <td class="p-3 text-center">
+                            <a href="https://wa.me/${telWhatsApp}?text=Hola%20${encodeURIComponent(p.nombre_cliente)},%20vimos%20tu%20interés%20en%20el%20equipo%20${encodeURIComponent(p.equipo_interes)}.%20¿En%20qué%20podemos%20ayudarte?" target="_blank" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded shadow-sm text-xs font-bold flex items-center justify-center gap-1">
+                                💬 WhatsApp
+                            </a>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        async function crearPedido(id_producto) {
+            const respuesta = await fetch('/pedidos/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ producto_id: id_producto, cantidad: 1 })
+            });
+
+            if (!respuesta.ok) {
+                const error = await respuesta.json();
+                Swal.fire({ icon: 'error', title: 'Oops...', text: error.detail, confirmButtonColor: '#3085d6' });
+                return;
+            }
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Venta registrada', showConfirmButton: false, timer: 1500 });
+            cargarPedidos(); 
+            cargarProductos(); 
+        }
+
+        async function guardarProducto(e) {
+            e.preventDefault();
+            const nuevoProd = {
+                nombre: document.getElementById('prod-nombre').value,
+                descripcion: document.getElementById('prod-desc').value,
+                precio: parseFloat(document.getElementById('prod-precio').value),
+                stock: parseInt(document.getElementById('prod-stock').value)
+            };
+            await fetch('/productos/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(nuevoProd)
+            });
+            document.getElementById('form-producto').reset();
+            cargarProductos(); 
+        }
+
+        async function borrarProducto(id_producto) {
+            Swal.fire({
+                title: '¿Eliminar equipo?', text: "Esta acción no se puede deshacer.", icon: 'warning',
+                showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Sí, borrar', cancelButtonText: 'Cancelar'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    await fetch('/productos/' + id_producto, { method: 'DELETE' });
+                    cargarProductos();
+                    Swal.fire('Eliminado', 'El equipo ha sido borrado.', 'success');
+                }
+            });
+        }
+
+        function filtrarProductos() {
+            const texto = document.getElementById('buscador').value.toLowerCase();
+            const tarjetas = document.querySelectorAll('.producto-tarjeta');
+            tarjetas.forEach(tarjeta => {
+                tarjeta.style.display = tarjeta.getAttribute('data-busqueda').includes(texto) ? 'flex' : 'none';
+            });
+        }
+
+        // INICIALIZAR TODO
+        cargarProductos();
+        cargarPedidos();
+        cargarProspectos();
+    </script>
+</body>
+</html>

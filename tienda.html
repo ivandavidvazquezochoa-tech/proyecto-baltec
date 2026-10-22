@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda Baltec</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+    <nav class="bg-blue-900 text-white p-4 shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-black tracking-wider">⚙️ BALTEC INDUSTRIAL</h1>
+            <div class="flex items-center gap-4">
+                <span class="text-sm cursor-pointer hover:text-blue-300">Catálogo</span>
+                <span class="text-sm cursor-pointer hover:text-blue-300">Contacto</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="bg-blue-800 text-white py-16 text-center shadow-inner">
+        <h2 class="text-4xl font-bold mb-4">Equipos de Ventilación de Alto Rendimiento</h2>
+        <p class="text-xl text-blue-200">Cotiza hoy mismo la mejor tecnología en extracción.</p>
+    </div>
+
+    <div class="max-w-6xl mx-auto py-12 px-5">
+        <div id="vitrina-productos" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <p class="text-center text-gray-500 col-span-3">Cargando catálogo en vivo...</p>
+        </div>
+    </div>
+
+    <script>
+        async function cargarVitrina() {
+            const res = await fetch('/productos/');
+            const productos = await res.json();
+            const contenedor = document.getElementById('vitrina-productos');
+            contenedor.innerHTML = '';
+
+            const productosDisponibles = productos.filter(p => p.stock > 0);
+
+            if(productosDisponibles.length === 0) {
+                contenedor.innerHTML = '<p class="text-center text-red-500 col-span-3 text-xl py-10">Actualmente no tenemos equipos en inventario.</p>';
+            }
+
+            productosDisponibles.forEach(p => {
+                contenedor.innerHTML += `
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition duration-300 border border-gray-100">
+                        <div class="h-48 bg-gradient-to-br from-gray-100 to-gray-300 flex items-center justify-center text-6xl">🏭</div>
+                        <div class="p-6">
+                            <h4 class="text-xl font-bold text-gray-800 mb-2">${p.nombre}</h4>
+                            <p class="text-gray-600 text-sm h-10 line-clamp-2 mb-4">${p.descripcion || 'Equipo industrial de alta eficiencia.'}</p>
+                            <p class="text-3xl font-black text-blue-900 mb-4">$${p.precio.toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
+                            
+                            <button onclick="solicitarCotizacion('${p.nombre}')" class="w-full bg-yellow-500 hover:bg-yellow-600 text-blue-900 py-3 rounded-lg font-bold transition shadow-md">
+                                📝 Solicitar Cotización
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        async function solicitarCotizacion(nombreEquipo) {
+            const { value: formValues } = await Swal.fire({
+                title: 'Solicitar Información',
+                html: `
+                    <p class="text-sm text-gray-500 mb-4">Ingresa tus datos para cotizar: <b>${nombreEquipo}</b></p>
+                    <input id="swal-nombre" class="swal2-input" placeholder="Tu Nombre o Empresa">
+                    <input id="swal-email" type="email" class="swal2-input" placeholder="Tu Correo Electrónico">
+                    <input id="swal-tel" type="tel" class="swal2-input" placeholder="Teléfono de Contacto">
+                `,
+                focusConfirm: false,
+                confirmButtonText: 'Enviar Solicitud',
+                confirmButtonColor: '#1d4ed8',
+                preConfirm: () => {
+                    return {
+                        nombre_cliente: document.getElementById('swal-nombre').value,
+                        email_cliente: document.getElementById('swal-email').value,
+                        telefono: document.getElementById('swal-tel').value,
+                        equipo_interes: nombreEquipo
+                    }
+                }
+            });
+
+            if (formValues) {
+                if(!formValues.nombre_cliente || !formValues.email_cliente || !formValues.telefono) {
+                    Swal.fire('Error', 'Por favor llena todos los campos', 'error');
+                    return;
+                }
+
+                await fetch('/prospectos/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formValues)
+                });
+
+                Swal.fire('¡Enviado!', 'Un asesor de Baltec se pondrá en contacto contigo muy pronto.', 'success');
+            }
+        }
+
+        cargarVitrina();
+    </script>
+</body>
+</html>
