@@ -34,19 +34,21 @@
     </div>
 
     <script>
+        let catalogoGlobal = []; // Guardamos el catálogo en memoria para la ventana emergente
+
         async function cargarVitrina() {
             const res = await fetch('/productos/');
             const productos = await res.json();
             const contenedor = document.getElementById('vitrina-productos');
             contenedor.innerHTML = '';
 
-            const productosDisponibles = productos.filter(p => p.stock > 0);
+            catalogoGlobal = productos.filter(p => p.stock > 0);
 
-            if(productosDisponibles.length === 0) {
+            if(catalogoGlobal.length === 0) {
                 contenedor.innerHTML = '<p class="text-center text-red-500 col-span-3 text-xl py-10">Actualmente no tenemos equipos en inventario.</p>';
             }
 
-            productosDisponibles.forEach(p => {
+            catalogoGlobal.forEach(p => {
                 contenedor.innerHTML += `
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-1 transition duration-300 border border-gray-200 flex flex-col h-full">
                         <!-- IMAGEN REAL DEL PRODUCTO -->
@@ -60,8 +62,9 @@
                             </div>
                             <div>
                                 <p class="text-3xl font-black text-blue-900 mb-4">$${p.precio.toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
-                                <button onclick="solicitarCotizacion('${p.nombre}')" class="w-full bg-yellow-500 hover:bg-yellow-600 text-blue-900 py-3 rounded-lg font-bold transition shadow-md flex justify-center items-center gap-2">
-                                    📝 Cotizar Equipo
+                                <!-- BOTÓN CAMBIADO A VER DETALLES -->
+                                <button onclick="verDetalles(${p.id})" class="w-full bg-blue-100 hover:bg-blue-200 text-blue-900 py-3 rounded-lg font-bold transition shadow-sm flex justify-center items-center gap-2">
+                                    🔍 Ver Detalles
                                 </button>
                             </div>
                         </div>
@@ -70,11 +73,42 @@
             });
         }
 
+        // NUEVA FUNCIÓN: Abre la ventana emergente con la ficha técnica
+        function verDetalles(id) {
+            const p = catalogoGlobal.find(prod => prod.id === id);
+            if (!p) return;
+
+            Swal.fire({
+                title: p.nombre,
+                html: `
+                    <div class="text-left mt-2">
+                        <div class="h-48 w-full bg-white flex items-center justify-center mb-4 p-2 border rounded border-gray-200">
+                            <img src="${p.imagen_url}" alt="${p.nombre}" class="max-h-full max-w-full object-contain">
+                        </div>
+                        <h4 class="font-bold text-gray-800 mb-1">Ficha Técnica:</h4>
+                        <p class="text-gray-600 text-sm mb-6 whitespace-pre-wrap">${p.descripcion || 'Equipo industrial de alta eficiencia.'}</p>
+                        <p class="text-4xl font-black text-blue-900 text-center mb-2">$${p.precio.toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: '📝 Cotizar Equipo',
+                cancelButtonText: 'Cerrar',
+                confirmButtonColor: '#eab308', // Amarillo para llamar a la acción
+                cancelButtonColor: '#9ca3af',  // Gris para cerrar
+                width: '600px' // Un poco más ancha para que se lea bien el texto
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si le da a cotizar, abrimos la otra ventana emergente del formulario
+                    solicitarCotizacion(p.nombre);
+                }
+            });
+        }
+
         async function solicitarCotizacion(nombreEquipo) {
             const { value: formValues } = await Swal.fire({
                 title: 'Solicitar Información',
                 html: `
-                    <p class="text-sm text-gray-500 mb-4">Ingresa tus datos para cotizar: <b>${nombreEquipo}</b></p>
+                    <p class="text-sm text-gray-500 mb-4">Ingresa tus datos para cotizar: <br><b>${nombreEquipo}</b></p>
                     <input id="swal-nombre" class="swal2-input" placeholder="Tu Nombre o Empresa">
                     <input id="swal-email" type="email" class="swal2-input" placeholder="Tu Correo Electrónico">
                     <input id="swal-tel" type="tel" class="swal2-input" placeholder="Teléfono de Contacto">
