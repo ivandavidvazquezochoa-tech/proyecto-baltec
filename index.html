@@ -11,7 +11,7 @@
     <div class="max-w-7xl mx-auto py-10 px-5">
         <h1 class="text-4xl font-bold text-blue-800 mb-8 text-center">Panel de Control Baltec</h1>
         
-        <!-- DASHBOARD DE ESTADÍSTICAS (Ahora con 4 columnas) -->
+        <!-- DASHBOARD DE ESTADÍSTICAS -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div class="bg-white rounded-lg p-6 shadow-md border-l-4 border-green-500">
                 <p class="text-gray-500 text-xs font-bold uppercase tracking-wider">Ingresos Totales</p>
@@ -43,6 +43,10 @@
                             <input type="number" id="prod-precio" placeholder="Precio ($)" class="w-1/2 border p-2 rounded outline-none focus:ring-2 focus:ring-green-400" required step="0.01">
                             <input type="number" id="prod-stock" placeholder="Stock" class="w-1/2 border p-2 rounded outline-none focus:ring-2 focus:ring-green-400" required>
                         </div>
+                        
+                        <!-- AQUÍ ESTÁ EL CAMPO DE LA IMAGEN -->
+                        <input type="url" id="prod-img" placeholder="Link de la imagen (URL)" class="w-full border p-2 rounded outline-none focus:ring-2 focus:ring-green-400">
+                        
                         <button type="submit" class="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700 font-bold transition">Guardar en Catálogo</button>
                     </form>
                 </div>
@@ -69,7 +73,7 @@
             </div>
         </div>
 
-        <!-- NUEVA BANDEJA DE PROSPECTOS (LEADS CRM) -->
+        <!-- BANDEJA DE PROSPECTOS -->
         <div class="bg-white shadow-md rounded-lg p-6 border-t-4 border-purple-500">
             <h2 class="text-2xl font-semibold mb-4 text-gray-700">📞 Bandeja de Cotizaciones (Leads)</h2>
             <div class="overflow-x-auto">
@@ -156,7 +160,6 @@
             });
         }
 
-        // CARGAR LOS PROSPECTOS (LEADS)
         async function cargarProspectos() {
             const res = await fetch('/prospectos/');
             const prospectos = await res.json();
@@ -171,7 +174,6 @@
             }
 
             prospectos.forEach(p => {
-                // Formateamos el teléfono para WhatsApp (quitando espacios o guiones)
                 const telWhatsApp = p.telefono.replace(/\D/g,'');
                 tabla.innerHTML += `
                     <tr class="hover:bg-gray-50 transition border-b">
@@ -213,7 +215,8 @@
                 nombre: document.getElementById('prod-nombre').value,
                 descripcion: document.getElementById('prod-desc').value,
                 precio: parseFloat(document.getElementById('prod-precio').value),
-                stock: parseInt(document.getElementById('prod-stock').value)
+                stock: parseInt(document.getElementById('prod-stock').value),
+                imagen_url: document.getElementById('prod-img').value || "https://via.placeholder.com/400x300?text=FOTO+PENDIENTE"
             };
             await fetch('/productos/', {
                 method: 'POST',
@@ -245,7 +248,6 @@
             });
         }
 
-        // INICIALIZAR TODO
         cargarProductos();
         cargarPedidos();
         cargarProspectos();
