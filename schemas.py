@@ -8,7 +8,7 @@ class ProductoBase(BaseModel):
     descripcion: Optional[str] = None
     precio: float
     stock: int
-    imagen_url: str = "https://via.placeholder.com/400x300?text=SIN+FOTO" # <-- ¡AQUÍ ESTÁ LA MAGIA!
+    imagen_url: Optional[str] = "https://via.placeholder.com/400x300?text=SIN+FOTO"
 
 class ProductoCreate(BaseModel):
     nombre: str
