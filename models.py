@@ -11,18 +11,18 @@ class Usuario(Base):
 # --- NUEVAS TABLAS PARA LA DEMO ---
 
 class Producto(Base):
-    __tablename__ = "productos_v2" # Renombrado para crear la tabla desde cero
+    __tablename__ = "productos_v2" # <-- Corregido para evitar errores
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String, index=True)
     descripcion = Column(String)
     precio = Column(Float)
     stock = Column(Integer)
-    imagen_url = Column(String, default="https://via.placeholder.com/400x300?text=SIN+FOTO") # <-- ESTA LÍNEA FALTABA
+    imagen_url = Column(String, default="https://via.placeholder.com/400x300?text=SIN+FOTO") # <-- Línea recuperada
 
 class Pedido(Base):
     __tablename__ = "pedidos"
     id = Column(Integer, primary_key=True, index=True)
-    producto_id = Column(Integer, ForeignKey("productos.id"))
+    producto_id = Column(Integer, ForeignKey("productos_v2.id")) # <-- Ajustado a la nueva tabla
     cantidad = Column(Integer)
     total = Column(Float)
 
