@@ -33,17 +33,8 @@ def get_db():
         db.close()
 
 
-# ESTA RUTA AHORA ESTÁ PROTEGIDA CON CONTRASEÑA
+# ESTA RUTA AHORA ES LA PRINCIPAL Y MUESTRA LA TIENDA PÚBLICA (SIN CONTRASEÑA)
 @app.get("/", response_class=HTMLResponse)
-def leer_interfaz(username: str = Depends(verificar_admin)):
-    try:
-        with open("index.html", "r", encoding="utf-8") as f:
-            return f.read()
-    except FileNotFoundError:
-        return "<h1>Archivo index.html no encontrado.</h1>"
-
-# ESTA RUTA MUESTRA LA TIENDA PÚBLICA PARA LOS CLIENTES
-@app.get("/tienda", response_class=HTMLResponse)
 def leer_tienda():
     try:
         with open("tienda.html", "r", encoding="utf-8") as f:
@@ -51,6 +42,15 @@ def leer_tienda():
     except FileNotFoundError:
         return "<h1>Archivo tienda.html no encontrado.</h1>"
 
+# ESTA RUTA AHORA ES /negocio Y ESTÁ PROTEGIDA CON CONTRASEÑA PARA EL ADMINISTRADOR
+@app.get("/negocio", response_class=HTMLResponse)
+def leer_interfaz(username: str = Depends(verificar_admin)):
+    try:
+        with open("index.html", "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        return "<h1>Archivo index.html no encontrado.</h1>"
+    
 # --- RUTAS DE PRODUCTOS ---
 @app.post("/productos/", response_model=schemas.ProductoResponse)
 def crear_producto(producto: schemas.ProductoCreate, db: Session = Depends(get_db)):
