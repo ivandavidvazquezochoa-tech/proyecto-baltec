@@ -9,14 +9,18 @@
 </head>
 <body class="bg-gray-50 font-sans">
     <nav class="bg-blue-900 text-white p-4 shadow-lg sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-           <a href="/tienda"> <img src="https://i.postimg.cc/RVbswyq6/baltec-logo.jpg" alt="Logo Baltec Industrial" class="h-16 w-auto bg-white rounded p-1 shadow-sm"></a>
-            <div class="flex items-center gap-4">
-                <a href="/tienda" class="text-sm cursor-pointer hover:text-blue-300">Catálogo</a>
-                <span onclick="mostrarContacto()" class="text-sm cursor-pointer hover:text-blue-300">Contacto</span>
-            </div>
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+       <a href="/"> <img src="https://i.postimg.cc/RVbswyq6/baltec-logo.jpg" alt="Logo Baltec Industrial" class="h-16 w-auto bg-white rounded p-1 shadow-sm"></a>
+        <div class="flex items-center gap-4">
+            <!-- NUEVO ENLACE: Quiénes Somos -->
+            <a href="#quienes-somos" class="text-sm cursor-pointer hover:text-blue-300">Quiénes Somos</a>
+            
+            <!-- TUS ENLACES ACTUALES -->
+            <a href="/" class="text-sm cursor-pointer hover:text-blue-300">Catálogo</a>
+            <span onclick="mostrarContacto()" class="text-sm cursor-pointer hover:text-blue-300">Contacto</span>
         </div>
-    </nav>
+    </div>
+</nav>
 
     <!-- HERO SECTION CORPORATIVO -->
     <div class="relative bg-blue-900 text-white py-24 text-center shadow-inner overflow-hidden">
@@ -26,6 +30,22 @@
             <p class="text-xl text-blue-200 font-light">Cotiza hoy mismo la mejor tecnología en extracción y balanceo dinámico para tu industria.</p>
         </div>
     </div>
+    <section id="quienes-somos" class="bg-gray-50 py-16 px-4">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
+            <div class="flex-1">
+                <h2 class="text-3xl font-bold text-blue-900 mb-6">¿Quiénes Somos?</h2>
+                <p class="text-gray-700 leading-relaxed mb-4 text-justify">
+                    En Baltec Industrial somos especialistas con amplia experiencia en balanceo dinámico y ventilación. Nuestro compromiso es ofrecer tecnología de extracción de alto rendimiento, garantizando la calidad y eficiencia que la industria necesita.
+                </p>
+                <p class="text-gray-700 leading-relaxed text-justify">
+                    Trabajamos bajo los más altos estándares para asegurar la confiabilidad y durabilidad de nuestros equipos, brindando atención continua los 365 días del año en cualquier parte de la república.
+                </p>
+            </div>
+            <div class="flex-1 text-center">
+                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Instalaciones Baltec" class="w-full h-auto rounded-xl shadow-lg">
+            </div>
+        </div>
+    </section>
 
     <div class="max-w-6xl mx-auto py-12 px-5">
         <div id="vitrina-productos" class="grid grid-cols-1 md:grid-cols-3 gap-8">
