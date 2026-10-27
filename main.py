@@ -64,37 +64,6 @@ def crear_producto(producto: schemas.ProductoCreate, db: Session = Depends(get_d
 def leer_productos(db: Session = Depends(get_db)):
     return db.query(models.Producto).all()
 
-# --- RUTAS DE PEDIDOS ---
-@app.post("/pedidos/", response_model=schemas.PedidoResponse)
-def crear_pedido(pedido: schemas.PedidoCreate, db: Session = Depends(get_db)):
-    # Buscamos el producto
-    producto = db.query(models.Producto).filter(models.Producto.id == pedido.producto_id).first()
-    
-    if not producto:
-        raise HTTPException(status_code=404, detail="Producto no encontrado")
-        
-    if producto.stock < pedido.cantidad:
-        raise HTTPException(status_code=400, detail="Stock insuficiente en el inventario")
-    
-    # ¡Magia! Restamos el stock automáticamente
-    producto.stock -= pedido.cantidad
-    
-    total_calculado = producto.precio * pedido.cantidad
-    
-    nuevo_pedido = models.Pedido(
-        producto_id=pedido.producto_id, 
-        cantidad=pedido.cantidad, 
-        total=total_calculado
-    )
-    db.add(nuevo_pedido)
-    db.commit()
-    db.refresh(nuevo_pedido)
-    return nuevo_pedido
-
-@app.get("/pedidos/", response_model=list[schemas.PedidoResponse])
-def leer_pedidos(db: Session = Depends(get_db)):
-    return db.query(models.Pedido).all()
-
 # --- NUEVA RUTA PARA ELIMINAR ---
 @app.delete("/productos/{producto_id}")
 def eliminar_producto(producto_id: int, db: Session = Depends(get_db)):
