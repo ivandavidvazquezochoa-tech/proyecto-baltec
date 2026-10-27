@@ -6,32 +6,35 @@
     <title>Tienda Baltec</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- NUEVO: Librería CSS para animaciones de scroll -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
-<body class="bg-gray-50 font-sans">
-   <nav class="bg-blue-900 text-white p-4 shadow-lg sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto flex justify-between items-center">
-       <a href="/"> 
-           <img src="https://i.postimg.cc/c1ttjm3v/baltec-logo-Photoroom.png" alt="Logo Baltec Industrial" class="h-16 w-auto object-contain">
-       </a>
-        <div class="flex items-center gap-4">
-            <a href="#quienes-somos" class="text-sm cursor-pointer hover:text-blue-300">Quiénes Somos</a>
-            <a href="#catalogo" class="text-sm cursor-pointer hover:text-blue-300">Catálogo</a>
-            <span onclick="mostrarContacto()" class="text-sm cursor-pointer hover:text-blue-300">Contacto</span>
+<body class="bg-gray-50 font-sans overflow-x-hidden">
+    <nav class="bg-blue-900 text-white p-4 shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+           <a href="/"> 
+               <img src="https://i.postimg.cc/c1ttjm3v/baltec-logo-Photoroom.png" alt="Logo Baltec Industrial" class="h-16 w-auto object-contain">
+           </a>
+            <div class="flex items-center gap-4">
+                <a href="#quienes-somos" class="text-sm cursor-pointer hover:text-blue-300">Quiénes Somos</a>
+                <a href="#catalogo" class="text-sm cursor-pointer hover:text-blue-300">Catálogo</a>
+                <span onclick="mostrarContacto()" class="text-sm cursor-pointer hover:text-blue-300">Contacto</span>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
     <!-- HERO SECTION CORPORATIVO -->
     <div class="relative bg-blue-900 text-white py-24 text-center shadow-inner overflow-hidden">
         <div class="absolute inset-0 opacity-20 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&w=2070&auto=format&fit=crop');"></div>
-        <div class="relative z-10 max-w-4xl mx-auto px-5">
+        <div class="relative z-10 max-w-4xl mx-auto px-5" data-aos="zoom-in" data-aos-duration="1000">
             <h2 class="text-5xl font-extrabold mb-6 tracking-tight">Equipos de Ventilación de Alto Rendimiento</h2>
             <p class="text-xl text-blue-200 font-light">Cotiza hoy mismo la mejor tecnología en extracción y balanceo dinámico para tu industria.</p>
         </div>
     </div>
+    
     <section id="quienes-somos" class="bg-gray-50 py-16 px-4">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
-            <div class="flex-1">
+            <div class="flex-1" data-aos="fade-right" data-aos-duration="800">
                 <h2 class="text-3xl font-bold text-blue-900 mb-6">¿Quiénes Somos?</h2>
                 <p class="text-gray-700 leading-relaxed mb-4 text-justify">
                     En Baltec Industrial somos especialistas con amplia experiencia en balanceo dinámico y ventilación. Nuestro compromiso es ofrecer tecnología de extracción de alto rendimiento, garantizando la calidad y eficiencia que la industria necesita.
@@ -40,19 +43,20 @@
                     Trabajamos bajo los más altos estándares para asegurar la confiabilidad y durabilidad de nuestros equipos, brindando atención continua los 365 días del año en cualquier parte de la república.
                 </p>
             </div>
-            <div class="flex-1 text-center">
+            <div class="flex-1 text-center" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
                 <img src="https://i.postimg.cc/jdNq637T/quienes-somos-baltec-nueva.jpg" alt="Equipos de Ventilación Industrial Baltec" class="w-full h-auto rounded-xl shadow-lg">
             </div>
         </div>
     </section>
 
-<section id="catalogo" class="max-w-6xl mx-auto py-16 px-5">
-    <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Nuestro Catálogo de Equipos</h2>
-    
-    <div id="vitrina-productos" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <p class="text-center text-gray-500 col-span-3">Cargando catálogo en vivo...</p>
-    </div>
-</section>
+    <!-- SECCIÓN DE CATÁLOGO -->
+    <section id="catalogo" class="max-w-6xl mx-auto py-16 px-5">
+        <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center" data-aos="fade-up">Nuestro Catálogo de Equipos</h2>
+        
+        <div id="vitrina-productos" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <p class="text-center text-gray-500 col-span-3">Cargando catálogo en vivo...</p>
+        </div>
+    </section>
 
     <script>
         let catalogoGlobal = []; 
@@ -64,7 +68,6 @@
                 const contenedor = document.getElementById('vitrina-productos');
                 contenedor.innerHTML = '';
 
-                // Ya no filtramos por stock, tomamos todos los productos directamente
                 catalogoGlobal = productos;
 
                 if(catalogoGlobal.length === 0) {
@@ -72,12 +75,15 @@
                     return;
                 }
 
+                // Variable para dar un pequeño retraso en cascada a cada tarjeta
+                let delay = 0;
+
                 catalogoGlobal.forEach(p => {
                     const badgePersonalizable = p.es_personalizable ? `<span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-1 rounded border border-yellow-200">A la medida</span>` : '';
                     const badgeCategoria = p.categoria ? `<span class="bg-gray-200 text-gray-700 text-xs font-bold px-2 py-1 rounded border border-gray-300">${p.categoria}</span>` : '';
 
                     contenedor.innerHTML += `
-                        <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-1 transition duration-300 border border-gray-200 flex flex-col h-full">
+                        <div data-aos="fade-up" data-aos-delay="${delay}" class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-1 transition duration-300 border border-gray-200 flex flex-col h-full">
                             <div class="h-56 w-full bg-white flex items-center justify-center border-b border-gray-100 p-4">
                                 <img src="${p.imagen_url}" alt="${p.nombre}" class="max-h-full max-w-full object-contain drop-shadow-sm">
                             </div>
@@ -98,6 +104,8 @@
                             </div>
                         </div>
                     `;
+                    // Aumentamos el retraso para la siguiente tarjeta
+                    delay += 100;
                 });
             } catch (error) {
                 console.error("Error cargando productos:", error);
@@ -109,7 +117,6 @@
             const p = catalogoGlobal.find(prod => prod.id === id);
             if (!p) return;
 
-            // Preparamos el bloque de opciones si el equipo es personalizable
             const bloqueOpciones = (p.es_personalizable && p.opciones_personalizacion) 
                 ? `<div class="mt-4 p-3 bg-gray-50 rounded border border-gray-200">
                      <p class="text-xs font-bold text-gray-700 uppercase mb-1">Opciones de Fabricación:</p>
@@ -142,7 +149,7 @@
             });
         }
 
-       async function solicitarCotizacion(nombreEquipo) {
+        async function solicitarCotizacion(nombreEquipo) {
             const { value: formValues } = await Swal.fire({
                 title: 'Solicitar Información',
                 html: `
@@ -166,7 +173,6 @@
                         return false;
                     }
 
-                    // Si el cliente escribió detalles, los adjuntamos al nombre del equipo
                     const interesFinal = detalles ? `${nombreEquipo} | Especificaciones: ${detalles}` : nombreEquipo;
 
                     return {
@@ -214,7 +220,7 @@
         cargarVitrina();
     </script>
 
-    <footer class="bg-gray-900 text-gray-300 py-12 mt-16 border-t-4 border-yellow-500">
+    <footer class="bg-gray-900 text-gray-300 py-12 mt-16 border-t-4 border-yellow-500" data-aos="fade-up" data-aos-duration="1000">
         <div class="max-w-6xl mx-auto px-5 grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
                 <h3 class="text-white text-xl font-bold mb-4 tracking-wider">BALTEC INDUSTRIAL</h3>
@@ -248,5 +254,17 @@
     <a href="https://wa.me/525612065388" target="_blank" class="fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-2xl hover:bg-green-600 transition-transform transform hover:scale-110 z-50 flex items-center justify-center text-3xl" title="Contáctanos por WhatsApp">
         💬
     </a>
+
+    <!-- NUEVO: Script de inicialización de animaciones -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Inicializa las animaciones al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                once: true, // La animación solo ocurre una vez al bajar
+                offset: 50, // Se activa 50px antes de llegar al elemento
+            });
+        });
+    </script>
 </body>
 </html>
