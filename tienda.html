@@ -6,8 +6,13 @@
     <title>Tienda Baltec</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- NUEVO: Librería CSS para animaciones de scroll -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- LIBRERÍA SWIPER (Para los carruseles estilo Instagram) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        .swiper-button-next, .swiper-button-prev { color: #dc2626 !important; }
+        .swiper-pagination-bullet-active { background: #dc2626 !important; }
+    </style>
 </head>
 <body class="bg-gray-50 font-sans overflow-x-hidden">
     <nav class="bg-white text-gray-800 p-4 shadow-lg sticky top-0 z-50 border-b-2 border-red-600">
@@ -17,17 +22,15 @@
            </a>
             <div class="flex items-center gap-6 font-semibold">
                 <a href="#quienes-somos" class="text-sm cursor-pointer hover:text-red-600 transition-colors">Quiénes Somos</a>
+                <a href="#servicios" class="text-sm cursor-pointer hover:text-red-600 transition-colors">Servicios</a>
                 <a href="#catalogo" class="text-sm cursor-pointer hover:text-red-600 transition-colors">Catálogo</a>
                 <span onclick="mostrarContacto()" class="text-sm cursor-pointer hover:text-red-600 transition-colors">Contacto</span>
             </div>
         </div>
     </nav>
 
-    <!-- HERO SECTION ESTILO INDUSTRIAL (GRIS OSCURO/ACERO) -->
     <div class="relative bg-gray-900 text-white py-24 text-center shadow-inner overflow-hidden">
-        <!-- Se agregó filtro en blanco y negro a la imagen de fondo para un look más industrial -->
         <div class="absolute inset-0 opacity-20 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&w=2070&auto=format&fit=crop'); filter: grayscale(100%);"></div>
-        
         <div class="relative z-10 max-w-4xl mx-auto px-5" data-aos="zoom-in" data-aos-duration="1000">
             <h2 class="text-5xl font-extrabold mb-6 tracking-tight">Equipos de Ventilación de <span class="text-red-500">Alto Rendimiento</span></h2>
             <p class="text-xl text-gray-300 font-light">Cotiza hoy mismo la mejor tecnología en extracción y balanceo dinámico para tu industria.</p>
@@ -51,7 +54,99 @@
         </div>
     </section>
 
-    <!-- SECCIÓN DE CATÁLOGO -->
+    <!-- NUEVA SECCIÓN: SERVICIOS ESPECIALIZADOS -->
+    <section id="servicios" class="bg-gray-200 py-16 px-5 border-t border-b border-gray-300">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl font-bold text-center text-blue-900 mb-12" data-aos="fade-up">Servicios Especializados</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Análisis de Vibraciones -->
+                <div class="bg-white p-8 rounded-xl shadow-md border-l-4 border-red-600" data-aos="fade-right">
+                    <div class="flex items-center gap-4 mb-4">
+                        <span class="text-4xl">📈</span>
+                        <h3 class="text-2xl font-bold text-gray-800">Análisis de Vibraciones</h3>
+                    </div>
+                    <p class="text-gray-600 text-justify mb-4">
+                        Este servicio consiste en acudir con nuestro personal técnico capacitado asistidos por un analizador de vibraciones a sus instalaciones para hacer mediciones de las vibraciones mecánicas que pudiesen existir en equipos rotatorios, ventiladores, extractores, rodillos, poleas, molinos, canastas centrífugas, compresores, agitadores, motores, bombas, etc.
+                    </p>
+                    <p class="text-gray-600 text-justify font-semibold">
+                        Dándole a usted un pronóstico exacto de las condiciones en las que se encuentran sus equipos y así poderse evitar paros no programados o mantenimientos correctivos costosos para su empresa.
+                    </p>
+                </div>
+
+                <!-- Balanceo Dinámico -->
+                <div class="bg-white p-8 rounded-xl shadow-md border-l-4 border-blue-800" data-aos="fade-left">
+                    <div class="flex items-center gap-4 mb-6">
+                        <span class="text-4xl">⚙️</span>
+                        <h3 class="text-2xl font-bold text-gray-800">Balanceo Dinámico Industrial</h3>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-lg font-bold text-red-600 mb-2">📍 En Campo</h4>
+                            <p class="text-gray-600 text-sm text-justify">
+                                Se realiza directamente en el lugar donde se encuentre el equipo vibrando, evitando la necesidad de desmontar el rotor y perder mayor tiempo de producción. Realizado por técnicos capacitados equipados con analizador de vibraciones y lámpara estroboscópica. <strong>Capacidad de balancear equipos de hasta 20,000 R.P.M.</strong>
+                            </p>
+                        </div>
+                        <hr class="border-gray-100">
+                        <div>
+                            <h4 class="text-lg font-bold text-red-600 mb-2">🏭 En Nuestra Planta</h4>
+                            <p class="text-gray-600 text-sm text-justify">
+                                Balanceando únicamente el rotor del equipo. Aplicado en equipos que no se puedan balancear en campo por excesiva vibración o falta de acceso al rotor. Realizado en una máquina balanceadora estacionaria <strong>de hasta 1 tonelada de carga.</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NUEVA SECCIÓN: LÍNEAS ESPECIALES CON CARRUSELES -->
+    <section class="max-w-6xl mx-auto py-16 px-5">
+        <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center" data-aos="fade-up">Líneas Especiales</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            
+            <!-- Carrusel: Fundición de Aluminio -->
+            <div class="bg-white p-6 rounded-xl shadow border border-gray-100" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Fundición de Aluminio</h3>
+                <p class="text-sm text-gray-500 text-center mb-6">Estos equipos y rotores podemos fabricarlos según muestra o adaptarlos a sus necesidades.</p>
+                
+                <div class="swiper mySwiper rounded-lg overflow-hidden border border-gray-200">
+                    <div class="swiper-wrapper h-64 bg-gray-50">
+                        <!-- Reemplaza estas URLs con las fotos individuales de los rotores -->
+                        <div class="swiper-slide flex items-center justify-center p-4"><img src="https://via.placeholder.com/300?text=Rotor+1" class="object-contain max-h-full"></div>
+                        <div class="swiper-slide flex items-center justify-center p-4"><img src="https://via.placeholder.com/300?text=Rotor+2" class="object-contain max-h-full"></div>
+                        <div class="swiper-slide flex items-center justify-center p-4"><img src="https://via.placeholder.com/300?text=Rotor+3" class="object-contain max-h-full"></div>
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+
+            <!-- Carrusel: Línea Doméstica -->
+            <div class="bg-white p-6 rounded-xl shadow border border-gray-100" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Línea Doméstica y Oficina</h3>
+                <p class="text-sm text-gray-500 text-center mb-6">Diseñados para ventilar áreas pequeñas de una manera estética y práctica.</p>
+                
+                <div class="swiper mySwiper rounded-lg overflow-hidden border border-gray-200">
+                    <div class="swiper-wrapper h-64 bg-gray-50">
+                        <!-- Reemplaza estas URLs con las fotos de los ventiladores domésticos -->
+                        <div class="swiper-slide flex items-center justify-center p-4"><img src="https://via.placeholder.com/300?text=Domestico+1" class="object-contain max-h-full"></div>
+                        <div class="swiper-slide flex items-center justify-center p-4"><img src="https://via.placeholder.com/300?text=Domestico+2" class="object-contain max-h-full"></div>
+                        <div class="swiper-slide flex items-center justify-center p-4"><img src="https://via.placeholder.com/300?text=Domestico+3" class="object-contain max-h-full"></div>
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECCIÓN DE CATÁLOGO (Mantengo tu código original aquí) -->
     <section id="catalogo" class="max-w-6xl mx-auto py-16 px-5">
         <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center" data-aos="fade-up">Nuestro Catálogo de Equipos</h2>
         
@@ -62,14 +157,12 @@
 
     <script>
         let catalogoGlobal = []; 
-
         async function cargarVitrina() {
             try {
                 const res = await fetch('/productos/');
                 const productos = await res.json();
                 const contenedor = document.getElementById('vitrina-productos');
                 contenedor.innerHTML = '';
-
                 catalogoGlobal = productos;
 
                 if(catalogoGlobal.length === 0) {
@@ -77,9 +170,7 @@
                     return;
                 }
 
-                // Variable para dar un pequeño retraso en cascada a cada tarjeta
                 let delay = 0;
-
                 catalogoGlobal.forEach(p => {
                     const badgePersonalizable = p.es_personalizable ? `<span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-1 rounded border border-yellow-200">A la medida</span>` : '';
                     const badgeCategoria = p.categoria ? `<span class="bg-gray-200 text-gray-700 text-xs font-bold px-2 py-1 rounded border border-gray-300">${p.categoria}</span>` : '';
@@ -106,7 +197,6 @@
                             </div>
                         </div>
                     `;
-                    // Aumentamos el retraso para la siguiente tarjeta
                     delay += 100;
                 });
             } catch (error) {
@@ -222,20 +312,18 @@
         cargarVitrina();
     </script>
 
-    <footer class="bg-gray-900 text-gray-300 py-12 mt-16 border-t-4 border-yellow-500" data-aos="fade-up" data-aos-duration="1000">
+    <footer class="bg-gray-900 text-gray-300 py-12 border-t-4 border-red-600" data-aos="fade-up" data-aos-duration="1000">
         <div class="max-w-6xl mx-auto px-5 grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
                 <h3 class="text-white text-xl font-bold mb-4 tracking-wider">BALTEC INDUSTRIAL</h3>
                 <p class="text-sm leading-relaxed">Especialistas en Balanceo Dinámico y Ventilación Industrial. Empresa 100% mexicana ofreciendo servicio las 24 horas, los 365 días del año en cualquier parte de la república.</p>
             </div>
             <div>
-                <div>
                 <h3 class="text-white text-xl font-bold mb-4">Contacto Directo</h3>
                 <p class="text-sm mb-2 flex items-center gap-2">📍 Av. 3-A No. 62, Col. Santa Rosa, CDMX 07620</p>
                 <p class="text-sm mb-2 flex items-center gap-2">📞 Tel/Fax: 53-67-66-45</p>
                 <p class="text-sm mb-2 flex items-center gap-2">📱 WhatsApp: 56 1206 5388</p>
                 <p class="text-sm mb-2 flex items-center gap-2">✉️ ventas@baltecventilacion.com</p>
-            </div>
             </div>
             <div>
                 <h3 class="text-white text-xl font-bold mb-4">Nuestros Servicios</h3>
@@ -252,19 +340,38 @@
         </div>
     </footer>
 
-    <!-- BOTÓN FLOTANTE WHATSAPP -->
     <a href="https://wa.me/525612065388" target="_blank" class="fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-2xl hover:bg-green-600 transition-transform transform hover:scale-110 z-50 flex items-center justify-center text-3xl" title="Contáctanos por WhatsApp">
         💬
     </a>
 
-    <!-- NUEVO: Script de inicialización de animaciones -->
+    <!-- SCRIPTS DE ANIMACIÓN Y CARRUSELES -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"></script>
+    <!-- Incluir JS de Swiper al final -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        // Inicializa las animaciones al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar animaciones
             AOS.init({
-                once: true, // La animación solo ocurre una vez al bajar
-                offset: 50, // Se activa 50px antes de llegar al elemento
+                once: true,
+                offset: 50,
+            });
+
+            // Inicializar Carruseles
+            var swipers = new Swiper(".mySwiper", {
+                loop: true,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
             });
         });
     </script>
