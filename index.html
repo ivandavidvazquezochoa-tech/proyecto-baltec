@@ -37,14 +37,35 @@
                 <div class="bg-white shadow-md rounded-lg p-6 border-t-4 border-green-500">
                     <h2 class="text-xl font-semibold mb-4 text-gray-700">➕ Añadir Producto</h2>
                     <form id="form-producto" class="space-y-3" onsubmit="guardarProducto(event)">
+                        
                         <input type="text" id="prod-nombre" placeholder="Nombre (ej. Extractor)" class="w-full border p-2 rounded outline-none focus:ring-2 focus:ring-green-400" required>
+                        
+                        <!-- NUEVO: Select de Categoría -->
+                        <select id="prod-categoria" class="w-full border p-2 rounded outline-none focus:ring-2 focus:ring-green-400 text-gray-700" required>
+                            <option value="">Selecciona Categoría...</option>
+                            <option value="Extractores">Extractores</option>
+                            <option value="Inyectores">Inyectores</option>
+                            <option value="Colectores de Polvo">Colectores de Polvo</option>
+                            <option value="Refacciones">Refacciones</option>
+                            <option value="Fabricación Especial">Fabricación Especial</option>
+                        </select>
+
                         <textarea id="prod-desc" placeholder="Descripción técnica" class="w-full border p-2 rounded outline-none focus:ring-2 focus:ring-green-400" rows="2"></textarea>
+                        
                         <div class="flex gap-2">
                             <input type="number" id="prod-precio" placeholder="Precio ($)" class="w-1/2 border p-2 rounded outline-none focus:ring-2 focus:ring-green-400" required step="0.01">
                             <input type="number" id="prod-stock" placeholder="Stock" class="w-1/2 border p-2 rounded outline-none focus:ring-2 focus:ring-green-400" required>
                         </div>
                         
-                        <!-- AQUÍ ESTÁ EL CAMPO DE LA IMAGEN -->
+                        <!-- NUEVO: Sección de personalización -->
+                        <div class="p-3 bg-gray-50 border border-gray-200 rounded">
+                            <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2 cursor-pointer">
+                                <input type="checkbox" id="prod-personalizable" class="w-4 h-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                                ¿Fabricación a la medida?
+                            </label>
+                            <textarea id="prod-opciones" placeholder="Opciones de fabricación (ej. diámetros, acero inoxidable...)" class="w-full border p-2 rounded outline-none focus:ring-2 focus:ring-green-400 text-sm" rows="2"></textarea>
+                        </div>
+
                         <input type="url" id="prod-img" placeholder="Link de la imagen (URL)" class="w-full border p-2 rounded outline-none focus:ring-2 focus:ring-green-400">
                         
                         <button type="submit" class="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700 font-bold transition">Guardar en Catálogo</button>
@@ -110,16 +131,30 @@
             }
 
             productos.forEach(p => {
-                const textoBusqueda = `${p.nombre.toLowerCase()} ${p.descripcion ? p.descripcion.toLowerCase() : ''}`;
+                const textoBusqueda = `${p.nombre.toLowerCase()} ${p.descripcion ? p.descripcion.toLowerCase() : ''} ${p.categoria ? p.categoria.toLowerCase() : ''}`;
+                
+                // Etiquetas de categoría y personalización
+                const badgeCategoria = p.categoria ? `<span class="bg-gray-200 text-gray-700 text-xs font-bold px-2 py-1 rounded border border-gray-300">${p.categoria}</span>` : '';
+                const badgePersonalizable = p.es_personalizable ? `<span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-1 rounded border border-yellow-200">A la medida</span>` : '';
+
                 contenedor.innerHTML += `
                     <div class="producto-tarjeta border border-gray-200 rounded-lg p-4 flex flex-col justify-between bg-gray-50 hover:shadow-md transition" data-busqueda="${textoBusqueda}">
                         <div class="mb-3">
-                            <div class="flex justify-between items-start">
+                            <div class="flex justify-between items-start mb-2">
                                 <h3 class="font-bold text-lg text-blue-800">${p.nombre}</h3>
                                 <button onclick="borrarProducto(${p.id})" class="text-red-400 hover:text-red-700 font-bold px-2 text-xl" title="Eliminar">×</button>
                             </div>
+                            
+                            <div class="flex flex-wrap gap-2 mb-2">
+                                ${badgeCategoria}
+                                ${badgePersonalizable}
+                            </div>
+
                             <p class="text-sm text-gray-600 line-clamp-2">${p.descripcion || ''}</p>
-                            <div class="flex justify-between items-center mt-2">
+                            
+                            ${p.es_personalizable && p.opciones_personalizacion ? `<p class="text-xs text-gray-500 mt-2 bg-white p-2 rounded border border-gray-100"><i>Opciones:</i> ${p.opciones_personalizacion}</p>` : ''}
+                            
+                            <div class="flex justify-between items-center mt-3">
                                 <p class="text-green-700 font-extrabold text-lg">$${p.precio.toFixed(2)}</p>
                                 <span class="${p.stock > 0 ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'} text-xs font-semibold px-2 py-1 rounded">Stock: ${p.stock}</span>
                             </div>
@@ -209,22 +244,38 @@
             cargarProductos(); 
         }
 
+        // NUEVA LÓGICA: Procesar los datos de categoría y personalización
         async function guardarProducto(e) {
             e.preventDefault();
             const nuevoProd = {
                 nombre: document.getElementById('prod-nombre').value,
+                categoria: document.getElementById('prod-categoria').value,
                 descripcion: document.getElementById('prod-desc').value,
                 precio: parseFloat(document.getElementById('prod-precio').value),
                 stock: parseInt(document.getElementById('prod-stock').value),
+                es_personalizable: document.getElementById('prod-personalizable').checked,
+                opciones_personalizacion: document.getElementById('prod-opciones').value,
                 imagen_url: document.getElementById('prod-img').value || "https://via.placeholder.com/400x300?text=FOTO+PENDIENTE"
             };
-            await fetch('/productos/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(nuevoProd)
-            });
-            document.getElementById('form-producto').reset();
-            cargarProductos(); 
+            
+            try {
+                const respuesta = await fetch('/productos/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(nuevoProd)
+                });
+                
+                if(respuesta.ok) {
+                    Swal.fire('Guardado', 'El producto se añadió al catálogo', 'success');
+                    document.getElementById('form-producto').reset();
+                    cargarProductos(); 
+                } else {
+                    const error = await respuesta.json();
+                    Swal.fire('Error al guardar', JSON.stringify(error), 'error');
+                }
+            } catch (error) {
+                Swal.fire('Error', 'No se pudo conectar con el servidor', 'error');
+            }
         }
 
         async function borrarProducto(id_producto) {
