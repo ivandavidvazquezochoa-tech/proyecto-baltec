@@ -8,14 +8,14 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-gray-50 font-sans">
-    <nav class="bg-blue-900 text-white p-4 shadow-lg sticky top-0 z-50">
+   <nav class="bg-blue-900 text-white p-4 shadow-lg sticky top-0 z-50">
     <div class="max-w-6xl mx-auto flex justify-between items-center">
        <a href="/"> 
            <img src="https://i.postimg.cc/c1ttjm3v/baltec-logo-Photoroom.png" alt="Logo Baltec Industrial" class="h-16 w-auto object-contain">
        </a>
         <div class="flex items-center gap-4">
             <a href="#quienes-somos" class="text-sm cursor-pointer hover:text-blue-300">Quiénes Somos</a>
-            <a href="/" class="text-sm cursor-pointer hover:text-blue-300">Catálogo</a>
+            <a href="#catalogo" class="text-sm cursor-pointer hover:text-blue-300">Catálogo</a>
             <span onclick="mostrarContacto()" class="text-sm cursor-pointer hover:text-blue-300">Contacto</span>
         </div>
     </div>
@@ -46,11 +46,13 @@
         </div>
     </section>
 
-    <div class="max-w-6xl mx-auto py-12 px-5">
-        <div id="vitrina-productos" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <p class="text-center text-gray-500 col-span-3">Cargando catálogo en vivo...</p>
-        </div>
+<section id="catalogo" class="max-w-6xl mx-auto py-16 px-5">
+    <h2 class="text-3xl font-bold text-blue-900 mb-10 text-center">Nuestro Catálogo de Equipos</h2>
+    
+    <div id="vitrina-productos" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <p class="text-center text-gray-500 col-span-3">Cargando catálogo en vivo...</p>
     </div>
+</section>
 
     <script>
         let catalogoGlobal = []; 
