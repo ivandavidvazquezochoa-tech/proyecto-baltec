@@ -140,41 +140,53 @@
             });
         }
 
-        async function solicitarCotizacion(nombreEquipo) {
+       async function solicitarCotizacion(nombreEquipo) {
             const { value: formValues } = await Swal.fire({
                 title: 'Solicitar Información',
                 html: `
                     <p class="text-sm text-gray-500 mb-4">Ingresa tus datos para cotizar: <br><b>${nombreEquipo}</b></p>
-                    <input id="swal-nombre" class="swal2-input" placeholder="Tu Nombre o Empresa">
-                    <input id="swal-email" type="email" class="swal2-input" placeholder="Tu Correo Electrónico">
-                    <input id="swal-tel" type="tel" class="swal2-input" placeholder="Teléfono de Contacto">
+                    <input id="swal-nombre" class="swal2-input" placeholder="Tu Nombre o Empresa" required>
+                    <input id="swal-email" type="email" class="swal2-input" placeholder="Tu Correo Electrónico" required>
+                    <input id="swal-tel" type="tel" class="swal2-input" placeholder="Teléfono de Contacto" required>
+                    <textarea id="swal-detalles" class="swal2-textarea" placeholder="¿Requieres alguna fabricación especial? (Ej. medidas, material, RPM...) Opcional."></textarea>
                 `,
                 focusConfirm: false,
                 confirmButtonText: 'Enviar Solicitud',
                 confirmButtonColor: '#1d4ed8',
                 preConfirm: () => {
+                    const nombre = document.getElementById('swal-nombre').value;
+                    const email = document.getElementById('swal-email').value;
+                    const tel = document.getElementById('swal-tel').value;
+                    const detalles = document.getElementById('swal-detalles').value;
+                    
+                    if (!nombre || !email || !tel) {
+                        Swal.showValidationMessage('Por favor llena los campos de contacto obligatorios');
+                        return false;
+                    }
+
+                    // Si el cliente escribió detalles, los adjuntamos al nombre del equipo
+                    const interesFinal = detalles ? `${nombreEquipo} | Especificaciones: ${detalles}` : nombreEquipo;
+
                     return {
-                        nombre_cliente: document.getElementById('swal-nombre').value,
-                        email_cliente: document.getElementById('swal-email').value,
-                        telefono: document.getElementById('swal-tel').value,
-                        equipo_interes: nombreEquipo
+                        nombre_cliente: nombre,
+                        email_cliente: email,
+                        telefono: tel,
+                        equipo_interes: interesFinal
                     }
                 }
             });
 
             if (formValues) {
-                if(!formValues.nombre_cliente || !formValues.email_cliente || !formValues.telefono) {
-                    Swal.fire('Error', 'Por favor llena todos los campos', 'error');
-                    return;
+                try {
+                    await fetch('/prospectos/', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formValues)
+                    });
+                    Swal.fire('¡Enviado!', 'Un asesor de Baltec se pondrá en contacto contigo muy pronto.', 'success');
+                } catch (error) {
+                    Swal.fire('Error', 'No se pudo enviar la solicitud.', 'error');
                 }
-
-                await fetch('/prospectos/', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formValues)
-                });
-
-                Swal.fire('¡Enviado!', 'Un asesor de Baltec se pondrá en contacto contigo muy pronto.', 'success');
             }
         }
 
