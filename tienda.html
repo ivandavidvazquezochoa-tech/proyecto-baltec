@@ -10,25 +10,27 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body class="bg-gray-50 font-sans overflow-x-hidden">
-    <nav class="bg-blue-900 text-white p-4 shadow-lg sticky top-0 z-50">
+    <nav class="bg-white text-gray-800 p-4 shadow-lg sticky top-0 z-50 border-b-2 border-red-600">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
            <a href="/"> 
                <img src="https://i.postimg.cc/c1ttjm3v/baltec-logo-Photoroom.png" alt="Logo Baltec Industrial" class="h-16 w-auto object-contain">
            </a>
-            <div class="flex items-center gap-4">
-                <a href="#quienes-somos" class="text-sm cursor-pointer hover:text-blue-300">Quiénes Somos</a>
-                <a href="#catalogo" class="text-sm cursor-pointer hover:text-blue-300">Catálogo</a>
-                <span onclick="mostrarContacto()" class="text-sm cursor-pointer hover:text-blue-300">Contacto</span>
+            <div class="flex items-center gap-6 font-semibold">
+                <a href="#quienes-somos" class="text-sm cursor-pointer hover:text-red-600 transition-colors">Quiénes Somos</a>
+                <a href="#catalogo" class="text-sm cursor-pointer hover:text-red-600 transition-colors">Catálogo</a>
+                <span onclick="mostrarContacto()" class="text-sm cursor-pointer hover:text-red-600 transition-colors">Contacto</span>
             </div>
         </div>
     </nav>
 
-    <!-- HERO SECTION CORPORATIVO -->
-    <div class="relative bg-blue-900 text-white py-24 text-center shadow-inner overflow-hidden">
-        <div class="absolute inset-0 opacity-20 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&w=2070&auto=format&fit=crop');"></div>
+    <!-- HERO SECTION ESTILO INDUSTRIAL (GRIS OSCURO/ACERO) -->
+    <div class="relative bg-gray-900 text-white py-24 text-center shadow-inner overflow-hidden">
+        <!-- Se agregó filtro en blanco y negro a la imagen de fondo para un look más industrial -->
+        <div class="absolute inset-0 opacity-20 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&w=2070&auto=format&fit=crop'); filter: grayscale(100%);"></div>
+        
         <div class="relative z-10 max-w-4xl mx-auto px-5" data-aos="zoom-in" data-aos-duration="1000">
-            <h2 class="text-5xl font-extrabold mb-6 tracking-tight">Equipos de Ventilación de Alto Rendimiento</h2>
-            <p class="text-xl text-blue-200 font-light">Cotiza hoy mismo la mejor tecnología en extracción y balanceo dinámico para tu industria.</p>
+            <h2 class="text-5xl font-extrabold mb-6 tracking-tight">Equipos de Ventilación de <span class="text-red-500">Alto Rendimiento</span></h2>
+            <p class="text-xl text-gray-300 font-light">Cotiza hoy mismo la mejor tecnología en extracción y balanceo dinámico para tu industria.</p>
         </div>
     </div>
     
