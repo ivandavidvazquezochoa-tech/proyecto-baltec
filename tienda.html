@@ -437,10 +437,9 @@
         💬
     </a>
 
-    <!-- SCRIPTS DE ANIMACIÓN Y CARRUSELES -->
+<!-- SCRIPTS DE ANIMACIÓN Y CARRUSELES -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"></script>
-    <!-- Incluir JS de Swiper al final -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Inicializar animaciones
@@ -449,21 +448,25 @@
                 offset: 50,
             });
 
-            // Inicializar Carruseles
-            var swipers = new Swiper(".mySwiper", {
-                loop: true,
-                autoplay: {
-                    delay: 3000,
-                    disableOnInteraction: false,
-                },
-                pagination: {
-                    el: ".swiper-pagination",
-                    clickable: true,
-                },
-                navigation: {
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev",
-                },
+            // Inicializar cada carrusel de forma independiente
+            document.querySelectorAll('.mySwiper').forEach(function(contenedor) {
+                new Swiper(contenedor, {
+                    loop: true,
+                    observer: true,
+                    observeParents: true,
+                    autoplay: {
+                        delay: 3000,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: contenedor.querySelector('.swiper-pagination'),
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: contenedor.querySelector('.swiper-button-next'),
+                        prevEl: contenedor.querySelector('.swiper-button-prev'),
+                    },
+                });
             });
         });
     </script>
